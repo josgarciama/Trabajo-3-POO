@@ -1,174 +1,123 @@
- package ejercicio _8_ 2;
+import tkinter as tk
+from tkinter import messagebox
+import math
 
- public class Notas {
+# ==========================================
+# CLASE DEL MODELO (Lógica de las Notas)
+# ==========================================
+class Notas:
+    def __init__(self):
+        # En Python usamos una lista en lugar de un array fijo
+        self.lista_notas = [0.0] * 5
 
-    public double[] listaNotas = new double[5];
+    def calcular_promedio(self):
+        suma = sum(self.lista_notas)
+        return suma / len(self.lista_notas)
 
-    public double calcularPromedio() {
-        double suma = 0;
-        for (double nota : listaNotas) {
-           suma += nota;
-       }
-        return suma / listaNotas.length;
-   }
+    def calcular_desviacion(self):
+        promedio = self.calcular_promedio()
+        suma_cuadrados = sum(math.pow(nota - promedio, 2) for nota in self.lista_notas)
+        return math.sqrt(suma_cuadrados / len(self.lista_notas))
 
-    public double calcularDesviacion() {
-        double promedio = calcularPromedio();
-        double sumaCuadrados = 0;
-        for (double nota : listaNotas) {
-            sumaCuadrados += Math.pow(nota - promedio, 2);
-       }
-        return Math.sqrt(sumaCuadrados / listaNotas.length);
-   }
+    def calcular_mayor(self):
+        return max(self.lista_notas)
 
-    public double calcularMayor() {
-        double mayor = listaNotas[0];
-        for (double nota : listaNotas) {
-            if (nota > mayor) {
-               mayor = nota;
-           }
-       }
-        return mayor;
-   }
+    def calcular_menor(self):
+        return min(self.lista_notas)
 
-    public double calcularMenor() {
-        double menor = listaNotas[0];
-        for (double nota : listaNotas) {
-            if (nota < menor) {
-               menor = nota;
-           }
-       }
-        return menor;
-   }
-}
- 
- package ejercicio_8_2;
+# ==========================================
+# CLASE DE LA INTERFAZ (Ventana Principal)
+# ==========================================
+class VentanaPrincipal(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Notas del Estudiante")
+        # Manteniendo exactamente las mismas dimensiones que tu Java
+        self.geometry("420x410")
+        self.resizable(False, False)
 
- public class Principal {
+        # Equivalente a setLayout(null), usando el método place() con coordenadas
 
-    public static void main(String[] args) {
-        VentanaPrincipal miVentanaPrincipal;
-        miVentanaPrincipal = new VentanaPrincipal();
-        miVentanaPrincipal.setVisible(true);
-   }
-}
+        # Nota 1
+        tk.Label(self, text="Nota 1:").place(x=20, y=20, width=80, height=25)
+        self.campo_nota1 = tk.Entry(self)
+        self.campo_nota1.place(x=110, y=20, width=150, height=25)
 
+        # Nota 2
+        tk.Label(self, text="Nota 2:").place(x=20, y=55, width=80, height=25)
+        self.campo_nota2 = tk.Entry(self)
+        self.campo_nota2.place(x=110, y=55, width=150, height=25)
 
+        # Nota 3
+        tk.Label(self, text="Nota 3:").place(x=20, y=90, width=80, height=25)
+        self.campo_nota3 = tk.Entry(self)
+        self.campo_nota3.place(x=110, y=90, width=150, height=25)
 
+        # Nota 4
+        tk.Label(self, text="Nota 4:").place(x=20, y=125, width=80, height=25)
+        self.campo_nota4 = tk.Entry(self)
+        self.campo_nota4.place(x=110, y=125, width=150, height=25)
 
- package ejercicio_8_2;
+        # Nota 5
+        tk.Label(self, text="Nota 5:").place(x=20, y=160, width=80, height=25)
+        self.campo_nota5 = tk.Entry(self)
+        self.campo_nota5.place(x=110, y=160, width=150, height=25)
 
- import javax.swing.*;
- import java.awt.*;
- import java.awt.event.*;
+        # Botones
+        self.btn_calcular = tk.Button(self, text="Calcular", command=self.calcular)
+        self.btn_calcular.place(x=100, y=205, width=110, height=30)
 
- public class VentanaPrincipal extends JFrame implements  ActionListener {
+        self.btn_limpiar = tk.Button(self, text="Limpiar", command=self.limpiar)
+        self.btn_limpiar.place(x=220, y=205, width=110, height=30)
 
-    private JLabel labelNota1, labelNota2, labelNota3, labelNota4, labelNota5;
-    private JTextField campoNota1, campoNota2, campoNota3, campoNota4, campoNota5;
-    private JButton calcular, limpiar;
-    private JLabel promedio, desviacion, mayor, menor;
+        # Etiquetas de Resultados (anchor="w" es para alinearlas a la izquierda)
+        self.lbl_promedio = tk.Label(self, text="Promedio = ", anchor="w")
+        self.lbl_promedio.place(x=20, y=250, width=370, height=20)
 
-    public VentanaPrincipal() {
-        setTitle("Notas del Estudiante");
-        setSize(420, 410);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setResizable(false);
+        self.lbl_desviacion = tk.Label(self, text="Desviacion estandar = ", anchor="w")
+        self.lbl_desviacion.place(x=20, y=275, width=370, height=20)
 
-        Container contenedor = getContentPane();
-        contenedor.setLayout(null);
+        self.lbl_mayor = tk.Label(self, text="Valor mayor = ", anchor="w")
+        self.lbl_mayor.place(x=20, y=300, width=370, height=20)
 
-        labelNota1 = new JLabel("Nota 1:");
-        labelNota1.setBounds(20, 20, 80, 25);
-        contenedor.add(labelNota1);
+        self.lbl_menor = tk.Label(self, text="Valor menor = ", anchor="w")
+        self.lbl_menor.place(x=20, y=325, width=370, height=20)
 
-        campoNota1 = new JTextField();
-        campoNota1.setBounds(110, 20, 150, 25);
-        contenedor.add(campoNota1);
+    # Equivalente a tu método actionPerformed (botón calcular)
+    def calcular(self):
+        try:
+            notas = Notas()
+            # Capturamos los textos, los convertimos a decimales (float) y los guardamos
+            notas.lista_notas[0] = float(self.campo_nota1.get())
+            notas.lista_notas[1] = float(self.campo_nota2.get())
+            notas.lista_notas[2] = float(self.campo_nota3.get())
+            notas.lista_notas[3] = float(self.campo_nota4.get())
+            notas.lista_notas[4] = float(self.campo_nota5.get())
 
-        labelNota2 = new JLabel("Nota 2:");
-        labelNota2.setBounds(20, 55, 80, 25);
-        contenedor.add(labelNota2);
+            # Actualizamos los textos usando format para limitar a 2 decimales
+            self.lbl_promedio.config(text=f"Promedio = {notas.calcular_promedio():.2f}")
+            self.lbl_desviacion.config(text=f"Desviacion estandar = {notas.calcular_desviacion():.2f}")
+            self.lbl_mayor.config(text=f"Valor mayor = {notas.calcular_mayor()}")
+            self.lbl_menor.config(text=f"Valor menor = {notas.calcular_menor()}")
+            
+        except ValueError:
+            # Si el usuario escribe letras o deja vacío, mostramos error
+            messagebox.showerror("Error", "Por favor, ingrese valores numéricos válidos en todas las notas.")
 
-        campoNota2 = new JTextField();
-        campoNota2.setBounds(110, 55, 150, 25);
-        contenedor.add(campoNota2);
+    # Equivalente a tu método actionPerformed (botón limpiar)
+    def limpiar(self):
+        self.campo_nota1.delete(0, tk.END)
+        self.campo_nota2.delete(0, tk.END)
+        self.campo_nota3.delete(0, tk.END)
+        self.campo_nota4.delete(0, tk.END)
+        self.campo_nota5.delete(0, tk.END)
+        
+        self.lbl_promedio.config(text="Promedio = ")
+        self.lbl_desviacion.config(text="Desviacion estandar = ")
+        self.lbl_mayor.config(text="Valor mayor = ")
+        self.lbl_menor.config(text="Valor menor = ")
 
-        labelNota3 = new JLabel("Nota 3:");
-        labelNota3.setBounds(20, 90, 80, 25);
-        contenedor.add(labelNota3);
-
-        campoNota3 = new JTextField();
-        campoNota3.setBounds(110, 90, 150, 25);
-        contenedor.add(campoNota3);
-
-        labelNota4 = new JLabel("Nota 4:");
-        labelNota4.setBounds(20, 125, 80, 25);
-        contenedor.add(labelNota4);
-
-        campoNota4 = new JTextField();
-        campoNota4.setBounds(110, 125, 150, 25);
-        contenedor.add(campoNota4);
-
-        labelNota5 = new JLabel("Nota 5:");
-        labelNota5.setBounds(20, 160, 80, 25);
-        contenedor.add(labelNota5);
-
-        campoNota5 = new JTextField();
-        campoNota5.setBounds(110, 160, 150, 25);
-        contenedor.add(campoNota5);
-
-        calcular = new JButton("Calcular");
-        calcular.setBounds(100, 205, 110, 30);
-        calcular.addActionListener(this);
-        contenedor.add(calcular);
-
-        limpiar = new JButton("Limpiar");
-        limpiar.setBounds(220, 205, 110, 30);
-        limpiar.addActionListener(this);
-        contenedor.add(limpiar);
-
-        promedio = new JLabel("Promedio = ");
-        promedio.setBounds(20, 250, 370, 20);
-        contenedor.add(promedio);
-
-        desviacion = new JLabel("Desviacion estandar = ");
-        desviacion.setBounds(20, 275, 370, 20);
-        contenedor.add(desviacion);
-
-        mayor = new JLabel("Valor mayor = ");
-        mayor.setBounds(20, 300, 370, 20);
-        contenedor.add(mayor);
-
-        menor = new JLabel("Valor menor = ");
-        menor.setBounds(20, 325, 370, 20);
-        contenedor.add(menor);
-   }
-
-    @Override
-    public void actionPerformed(ActionEvent evento) {
-        if (evento.getSource() == calcular) {
-            Notas notas = new Notas();
-            notas.listaNotas[0] =  Double.parseDouble(campoNota1.getText());
-            notas.listaNotas[1] = Double.parseDouble(campoNota2.getText());
-            notas.listaNotas[2] = Double.parseDouble(campoNota3.getText());
-            notas.listaNotas[3] = Double.parseDouble(campoNota4.getText());
-            notas.listaNotas[4] = Double.parseDouble(campoNota5.getText());
-
-            promedio.setText("Promedio = " + String.format("%.2f", notas.calcularPromedio()));
-            desviacion.setText("Desviacion estandar = " + String.format("%.2f", notas.calcularDesviacion()));
-            mayor.setText("Valor mayor = " + String.valueOf(notas.calcularMayor()));
-            menor.setText("Valor menor = " + String.valueOf(notas.calcularMenor()));
-       }
-
-       if (evento.getSource() == limpiar) {
-            campoNota1.setText("");
-            campoNota2.setText("");
-            campoNota3.setText("");
-            campoNota4.setText("");
-            campoNota5.setText("");
-       }
-   }
-}
-
+# Equivalente al public static void main de Java
+if __name__ == "__main__":
+    mi_ventana_principal = VentanaPrincipal()
+    mi_ventana_principal.mainloop()
